@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Создание персонажа</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <h2>Создание персонажа</h2>
+
+  <label>Имя:</label><br>
+  <input id="name" placeholder="Имя персонажа"><br><br>
+
+  <label>Раса:</label><br>
+  <select id="race" onchange="loadSubraces()">
+    <option disabled selected>Выбери расу</option>
+    <option>Человек</option>
+    <option>Эльф</option>
+    <option>Дворф</option>
+    <option>Полуорк</option>
+  </select><br><br>
+
+  <label>Подраса:</label><br>
+  <select id="subrace">
+    <option>—</option>
+  </select><br><br>
+
+  <label>Класс:</label><br>
+  <select id="class">
+    <option disabled selected>Выбери класс</option>
+    <option>Воин</option>
+    <option>Волшебник</option>
+    <option>Плут</option>
+    <option>Жрец</option>
+  </select><br><br>
+
+  <label>Происхождение (Background):</label><br>
+  <select id="background">
+    <option disabled selected>Выбери происхождение</option>
+    <option>Солдат</option>
+    <option>Ученик мага</option>
+    <option>Бродяга</option>
+    <option>Благородный</option>
+  </select><br><br>
+
+  <button onclick="nextStep()">Дальше →</button>
+  <button onclick="window.location='index.html'">Отмена</button>
+
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Распределение характеристик</title>
+  <style>
+    body { font-family: monospace; padding: 10px; background: #f8f8f8; text-align: center; }
+    h2 { margin-bottom: 5px; }
+    #stats-container {
+      margin: 10px auto;
+      display: inline-block;
+      text-align: left;
+    }
+    .stat {
+      margin: 5px 0;
+      padding: 5px;
+      background: #fff;
+      border: 1px solid #ccc;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 200px;
+    }
+    button {
+      margin: 2px;
+      padding: 4px 8px;
+      cursor: pointer;
+    }
+    #controls { margin-top: 15px; }
+  </style>
+</head>
+<body>
+  <h2>Распредели характеристики</h2>
+  <p>Всего очков: 27</p>
+  <p>Осталось: <span id="points">27</span></p>
+
+  <div id="stats-container"></div>
+
+  <div id="controls">
+    <button onclick="randomize()">🎲 Случайно</button>
+    <button onclick="saveCharacter()">💾 Сохранить</button>
+    <button onclick="window.location='create.html'">⬅ Назад</button>
+  </div>
+
+  <script>
+    const COST_TABLE = [0, 1, 2, 3, 4, 5, 7, 9];
+    const STAT_NAMES = ["Сила", "Ловкость", "Телосложение", "Интеллект", "Мудрость", "Харизма"];
+    let points = 27;
+    let stats = {};
+    STAT_NAMES.forEach(n => stats[n] = 8);
+
+    function statCost(v) { return COST_TABLE[v - 8]; }
+
+    function updatePoints() {
+      document.getElementById("points").textContent = points;
+    }
+
+    function initStatsPage() {
+      const container = document.getElementById("stats-container");
+      container.innerHTML = "";
+      STAT_NAMES.forEach(name => {
+        const div = document.createElement("div");
+        div.className = "stat";
+        div.innerHTML = `
+          <span>${name}</span>
+          <div>
+            <button onclick="changeStat('${name}', -1)">-</button>
+            <span id="${name}">${stats[name]}</span>
+            <button onclick="changeStat('${name}', 1)">+</button>
+          </div>
+        `;
+        container.appendChild(div);
+      });
+      updatePoints();
+    }
+
+    function changeStat(stat, delta) {
+      const current = stats[stat];
+      const next = current + delta;
+      if (next < 8 || next > 15) return;
+      const diff = statCost(next) - statCost(current);
+      if (points - diff < 0) return;
+      stats[stat] = next;
+      points -= diff;
+      document.getElementById(stat).textContent = next;
+      updatePoints();
+    }
+
+    function randomize() {
+      points = 27;
+      STAT_NAMES.forEach(n => stats[n] = 8);
+      while (points > 0) {
+        const keys = STAT_NAMES.filter(n => stats[n] < 15);
+        const pick = keys[Math.floor(Math.random() * keys.length)];
+        const newVal = stats[pick] + 1;
+        const diff = statCost(newVal) - statCost(stats[pick]);
+        if (points - diff >= 0) {
+          stats[pick] = newVal;
+          points -= diff;
+        } else break;
+      }
+      STAT_NAMES.forEach(n => document.getElementById(n).textContent = stats[n]);
+      updatePoints();
+    }
+
+    function saveCharacter() {
+      alert("Персонаж сохранён! (здесь будет логика сохранения в базу)");
+      window.location = "index.html";
+    }
+
+    document.addEventListener("DOMContentLoaded", initStatsPage);
+  </script>
+</body>
+</html>
